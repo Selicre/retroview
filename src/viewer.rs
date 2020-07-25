@@ -58,7 +58,12 @@ impl Viewer {
         let gfx = RawImage2d::from_raw_rgba(gfx.into_raw(), dim);
 
 
-        let pal = pal.as_image();
+        let mut pal = pal.as_image();
+
+        for i in 0..16 {
+            pal.put_pixel(0, i, image::Rgba([0;4]));
+        }
+
         let dim = pal.dimensions();
         let pal = RawImage2d::from_raw_rgba(pal.into_raw(), dim);
 
@@ -113,7 +118,7 @@ impl Viewer {
 }
 fn parse_obj_file(input: &[u8]) -> Vec<SpriteTile> {
     input.chunks_exact(6).enumerate().rev().flat_map(|(i,c)| if let &[a,b,y,x,props,tile] = c {
-        let tile_id = tile as u32 + ((props as u32 & 0x01) << 8) + 0x200;
+        let tile_id = tile as u32 + ((props as u32 & 0x01) << 8) + 0x000;
         let pal = ((props as u32 >> 1) & 0x07) + 8;
         let flip = props as u32 >> 6;
 
