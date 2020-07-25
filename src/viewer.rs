@@ -112,20 +112,23 @@ impl Viewer {
     }
 }
 fn parse_obj_file(input: &[u8]) -> Vec<SpriteTile> {
-    input.chunks_exact(6).rev().flat_map(|c| if let &[a,b,y,x,props,tile] = c {
+    input.chunks_exact(6).enumerate().rev().flat_map(|(i,c)| if let &[a,b,y,x,props,tile] = c {
         let tile_id = tile as u32 + ((props as u32 & 0x01) << 8) + 0x200;
         let pal = ((props as u32 >> 1) & 0x07) + 8;
         let flip = props as u32 >> 6;
+
+        let voffset = ((i / 0x40) * 0x80) as f32;
+
         if a & 0x80 != 0 {
-            println!("{:02X}{:02X} ab, {:02X}:{:02X} off, {:03X} tile", a,b, x,y, tile_id);
+            println!("{}: {:02X}{:02X} ab, {:02X}:{:02X} off, {:03X} tile", i, a,b, x,y, tile_id);
             if a & 0x01 != 0 {
                 let hflip = flip & 0x01 != 0;
                 let vflip = flip & 0x02 != 0;
 
                 let h1 = if hflip { 8.0 } else { 0.0 };
                 let h2 = if hflip { 0.0 } else { 8.0 };
-                let v1 = if vflip { 8.0 } else { 0.0 };
-                let v2 = if vflip { 0.0 } else { 8.0 };
+                let v1 = if vflip { 8.0 } else { 0.0 } + voffset;
+                let v2 = if vflip { 0.0 } else { 8.0 } + voffset;
                 vec![
                     SpriteTile {
                         position: [x as i8 as f32 + h1, y as i8 as f32 + v1],

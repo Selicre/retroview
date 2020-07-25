@@ -39,7 +39,7 @@ fn main() {
         c.replace("@", gfx_name.parent().unwrap().to_str().unwrap())
     }).map(|c| std::fs::read(&c).unwrap()).unwrap_or(vec![]);
 
-    obj.truncate(0x2000);
+    obj.truncate(0x3000);
 
 
     gl::run(move |driver, ev| {
