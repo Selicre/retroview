@@ -1,0 +1,18 @@
+[package]
+name = "retroview"
+version = "0.2.0"
+authors = ["x10A94 <hyperpone@gmail.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[profile.release]
+debug = true
+#lto = true
+
+
+[dependencies]
+snesgfx = { path = "../snesgfx" }
+image = "0.23"
+glium = "0.27"
+cgmath = "0.17"
